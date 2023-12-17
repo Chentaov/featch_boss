@@ -173,6 +173,6 @@ def bugUrl():
 
 login()
 bugUrl()
-bugInfo()
+# bugInfo()
 # def imgShotcut():
 #     driver.get_screenshot_as_base64()
