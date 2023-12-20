@@ -20,6 +20,9 @@ salary = '405,404'  # 405 10-20k,404 5-10k
 query_city = code_mapping_city.get_city_code('杭州')  # 查找的城市代码
 # query_area = code_mapping_city.get_region_code('余杭区') #查找的区域代码
 query_areas = ['上城区', '余杭区', '拱墅区', '西湖区', '滨江区', '萧山', '钱塘区', '临平区']
+# query_city = code_mapping_city.get_city_code('苏州')  # 查找的城市代码
+# # query_area = code_mapping_city.get_region_code('余杭区') #查找的区域代码
+# query_areas = ['常熟市', '张家港市', '昆山市', '太仓市', '姑苏区', '吴江区', '虎丘区', '吴中区', '相城区', '苏州工业园区']
 
 # query_areas = [code_mapping_city.get_region_code(area) for area in query_areas]
 
@@ -68,7 +71,8 @@ def bugInfo():
                     page) + '&experience=' + experience + '&salary=' + salary
                 driver.get(query_url)
                 driver.refresh()
-                time.sleep(7)
+                driver.implicitly_wait(10)
+                time.sleep(4)
                 print('page=' + str(page))
 
                 varify_code_url = '/web/user/safe/verify-slider'
@@ -80,7 +84,8 @@ def bugInfo():
                     time.sleep(18)
                     driver.get(query_url)
                     driver.refresh()
-                    time.sleep(3)
+                    driver.implicitly_wait(5)
+                    time.sleep(1)
 
                 job_url = driver.find_elements(By.CLASS_NAME, 'job-card-left')
                 job_name = driver.find_elements(By.CLASS_NAME, 'job-name')
@@ -134,13 +139,15 @@ def bugInfo():
 def bugUrl():
     push_count = 0
     query = (Jobs.select(Jobs.url, Jobs.chated, Jobs.id_job, Jobs.job_name)
-             .where(((Jobs.job_name.contains('数据分析师')) | Jobs.job_name.contains('python') | Jobs.job_name.contains('爬虫') | Jobs.job_name.contains('测试') | (Jobs.job_name.contains('后端开发'))) & (Jobs.active == 1) & (Jobs.chated == 0)))
+             .where(((Jobs.job_name.contains('数据采集')) | Jobs.job_name.contains('python') | Jobs.job_name.contains('爬虫') | Jobs.job_name.contains('测试') | (Jobs.job_name.contains('后端开发'))) & (~Jobs.job_name.contains('编程') & ~Jobs.job_name.contains('硬件')) & (~Jobs.company_name.contains('华为') & ~Jobs.company_name.contains('阿里') & ~Jobs.company_name.contains('蚂蚁')) & (Jobs.active == 1) & (Jobs.chated == 0)))
     query = query.execute()
     for i in query:
         if push_count == 100:
             break
         driver.get(i.url)
         driver.refresh()
+        driver.implicitly_wait(10)
+        time.sleep(2)
         print(driver.current_url)
 
         varify_code_url = '/web/user/safe/verify-slider'
@@ -153,9 +160,9 @@ def bugUrl():
             time.sleep(15)
             driver.get(i.url)
             driver.refresh()
-            time.sleep(3)
+            driver.implicitly_wait(5)
 
-        time.sleep(3)
+        driver.implicitly_wait(5)
         # job_detail = driver.find_element(By.XPATH, '//*[@id="main"]/div[3]/div/div[2]/div[1]/div[2]')
         # job_detail = job_detail.text
         # try:
